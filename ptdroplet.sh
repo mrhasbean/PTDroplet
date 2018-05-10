@@ -76,7 +76,7 @@ mkdir releases
 
 # create bot directory
 echo Please enter a name for this bot. For best compatibility, use only lower case a-z and NO spaces. eg. myfirstbot
-input -p 'Bot Name: ' botname
+read -p 'Bot Name: ' botname
 mkdir $botname
 cd $botname
 
