@@ -92,10 +92,19 @@ cd ..
 rm -rf ProfitTrailer
 chmod +x ProfitTrailer.jar
 
-echo Installation complete. Please proceed to edit your application.properties and settings files in the initialization folder as per the instructions on the ProfitTrailer Wiki (see https://wiki.profittrailer.com/doku.php?id=mandatory_settings)
+clear
+echo Installation complete. You must now reboot to finalise the installation. At the prompt below, simply type:
+echo     reboot
 echo
-echo After you have completed the Mandatory Settings, launch ProfitTrailer by typing "pm2 start pm2-ProfitTrailer.json"
-echo You can then monitor the bot using the pm2 Dashboard by typing "pm2 dash"
+echo After rebooting, please proceed to edit your application.properties and settings files.
+echo See https://wiki.profittrailer.com/doku.php?id=mandatory_settings for details.
+echo
+echo After you have completed the Mandatory Settings, launch ProfitTrailer. At the prompt, type:
+echo     cd /var/opt/pt/$botname
+echo     pm2 start pm2-ProfitTrailer.json
+echo
+echo You can then monitor the bot using the pm2 Dashboard by typing:
+echo     pm2 dash
 echo
 echo Happy Profit Trailing!
 
