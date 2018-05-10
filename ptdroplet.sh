@@ -10,13 +10,41 @@ echo "#                                                              #"
 echo "################################################################"
 echo
 
-# Prevents doing this from other account than root
+# installation requires root access
+echo Checking root access
 if [ "x$(id -u)" != 'x0' ]; then
     echo 'Error: this script can only be executed by root'
     exit 1
 fi
 
-echo Updating apt
+# creates SWAP on the server
+echo Creating SWAP space
+sudo fallocate -l 1024M /swapfile
+sudo chmod 600 /swapfile
+sudo mkswap /swapfile
+sudo swapon /swapfile
+sudo echo "/swapfile   none    swap    sw    0   0" >> /etc/fstab
+sudo sysctl vm.swappiness=10
+sudo echo "vm.swappiness=10" >> /etc/sysctl.conf
+sudo sysctl vm.vfs_cache_pressure=50
+sudo echo "vm.vfs_cache_pressure=50" >> /etc/sysctl.conf
+
+# change time zone at your new server
+echo Change server timezone
+dpkg-reconfigure tzdata
+
+# set the locale on your computer
+echo Set server locale
+export LC_ALL=en_US.UTF-8
+export LANG="en_US.UTF-8"
+export LANGUAGE=en_US.UTF-8
+echo 'LC_ALL=en_US.UTF-8' >> /etc/environment
+echo 'LANG=en_US.UTF-8' >> /etc/environment
+echo 'LANGUAGE=en_US.UTF-8' >> /etc/environment
+dpkg-reconfigure locales
+
+# update server software
+echo Updating software
 apt-get -y update
 
 # install a few useful tools
