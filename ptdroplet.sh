@@ -75,43 +75,43 @@ sleep 5
 clear
 
 # install a few useful tools
-echo Stage 6: Installing archive tools
+echo Stage 5: Installing archive tools
 sleep 2
 apt-get -y install zip
 apt-get -y install unzip
 apt-get -y install p7zip-full
-echo Stage 6: Complete
+echo Stage 5: Complete
 sleep 5
 clear
 
 # install java
-echo Stage 7: Installing Java
+echo Stage 6: Installing Java
 sleep 2
 apt-get -y install default-jdk
-echo Stage 7: Complete
+echo Stage 6: Complete
 sleep 5
 clear
 
 # install nodejs and link to /nodejs and /node directories
-echo Stage 8: Installing nodejs
+echo Stage 7: Installing nodejs
 sleep 2
 apt-get -y install nodejs
 ln -s /usr/bin/nodejs /usr/bin/node
-echo Stage 8: Complete
+echo Stage 7: Complete
 sleep 5
 clear
 
 # install npm and use npm to install pm2
-echo Stage 9: Installing npm and pm2
+echo Stage 8: Installing npm and pm2
 sleep 2
 apt-get -y install npm
 npm install pm2@latest -g
-echo Stage 9: Complete
+echo Stage 8: Complete
 sleep 5
 clear
 
 # create pt directory structure
-echo Stage 10: Creating base PT folder structure
+echo Stage 9: Creating base PT folder structure
 sleep 2
 cd /var/opt
 mkdir pt
@@ -123,12 +123,12 @@ echo Please enter a name for this bot. For best compatibility, use only lower ca
 read -p 'Bot Name: ' botname
 mkdir $botname
 cd $botname
-echo Stage 10: Complete
+echo Stage 9: Complete
 sleep 5
 clear
 
 # download latest ProfitTrailer and extract to bot directory
-echo Stage 11: Downloading latest ProfitTrailer release
+echo Stage 10: Downloading latest ProfitTrailer release
 sleep 2
 wget https://github.com/$(wget https://github.com/taniman/profit-trailer/releases/latest -O - | egrep '/.*/.*/.*zip' -o)
 unzip *zip
@@ -139,7 +139,7 @@ mv * ..
 cd ..
 rm -rf ProfitTrailer
 chmod +x ProfitTrailer.jar
-echo Stage 11: Complete
+echo Stage 10: Complete
 sleep 5
 
 clear
