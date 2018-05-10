@@ -1,5 +1,15 @@
 #!/bin/bash
 
+clear
+echo "################################################################"
+echo "#            https://github.com/mrhasbean/PTDroplet            #"
+echo "#                                                              #"
+echo "# We will go though the proccess of setting up a ProfitTrailer #"
+echo "#                        bot server.                           #"
+echo "#                                                              #"
+echo "################################################################"
+echo
+
 prompt_confirm() {
   while true; do
     read -r -n 1 -p "${1:-Continue?} [y/n]: " REPLY
@@ -11,15 +21,29 @@ prompt_confirm() {
   done  
 }
 
-clear
-echo "################################################################"
-echo "#            https://github.com/mrhasbean/PTDroplet            #"
-echo "#                                                              #"
-echo "# We will go though the proccess of setting up a ProfitTrailer #"
-echo "#                        bot server.                           #"
-echo "#                                                              #"
-echo "################################################################"
-echo
+set_timezone() {
+  dpkg-reconfigure tzdata
+  export LC_ALL=en_US.UTF-8
+  export LANG="en_US.UTF-8"
+  export LANGUAGE=en_US.UTF-8
+  echo 'LC_ALL=en_US.UTF-8' >> /etc/environment
+  echo 'LANG=en_US.UTF-8' >> /etc/environment
+  echo 'LANGUAGE=en_US.UTF-8' >> /etc/environment
+  dpkg-reconfigure locales
+}
+
+make_swap() {
+  fallocate -l 1024M /swapfile
+  chmod 600 /swapfile
+  mkswap /swapfile
+  swapon /swapfile
+  echo "/swapfile   none    swap    sw    0   0" >> /etc/fstab
+  sysctl vm.swappiness=10
+  echo "vm.swappiness=10" >> /etc/sysctl.conf
+  sysctl vm.vfs_cache_pressure=50
+  echo "vm.vfs_cache_pressure=50" >> /etc/sysctl.conf
+}
+
 prompt_confirm || exit 0
 clear
 
@@ -39,32 +63,26 @@ sleep 2
 echo Stage 2: Creating SWAP space
 echo
 sleep 2
-sudo fallocate -l 1024M /swapfile
-sudo chmod 600 /swapfile
-sudo mkswap /swapfile
-sudo swapon /swapfile
-sudo echo "/swapfile   none    swap    sw    0   0" >> /etc/fstab
-sudo sysctl vm.swappiness=10
-sudo echo "vm.swappiness=10" >> /etc/sysctl.conf
-sudo sysctl vm.vfs_cache_pressure=50
-sudo echo "vm.vfs_cache_pressure=50" >> /etc/sysctl.conf
+swapnum=$(( $(wc -l < /proc/swaps) - 1 ))
+if [ $swapnum -eq 0 ]
+then
+  make_swap
+else
+  echo Swap already exists, no further action required.
+fi
 echo
 echo Stage 2: Complete
 sleep 5
 clear
 
-# change time zone at your new server
-echo Stage 3: Change server timezone & locale
+# set time zone if not correct
+echo Stage 3: Check / set server timezone & locale
 echo
 sleep 2
-dpkg-reconfigure tzdata
-export LC_ALL=en_US.UTF-8
-export LANG="en_US.UTF-8"
-export LANGUAGE=en_US.UTF-8
-echo 'LC_ALL=en_US.UTF-8' >> /etc/environment
-echo 'LANG=en_US.UTF-8' >> /etc/environment
-echo 'LANGUAGE=en_US.UTF-8' >> /etc/environment
-dpkg-reconfigure locales
+echo "Current timezone setting:"
+timedatectl | grep "Time zone"
+echo
+prompt_confirm "Change it?" && set_timezone
 echo
 echo Stage 3: Complete
 sleep 5
@@ -128,14 +146,14 @@ clear
 echo Stage 9: Creating base PT folder structure
 echo
 sleep 2
+echo Please enter a name for this bot. For best compatibility, use only lower case a-z and NO spaces. eg. myfirstbot
+read -p 'Bot Name: ' botname
 cd /var/opt
 mkdir pt
 cd pt
 mkdir releases
 
 # create bot directory
-echo Please enter a name for this bot. For best compatibility, use only lower case a-z and NO spaces. eg. myfirstbot
-read -p 'Bot Name: ' botname
 mkdir $botname
 cd $botname
 echo
