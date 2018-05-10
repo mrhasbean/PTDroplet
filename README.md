@@ -26,6 +26,7 @@ Following installation, use your FTP client to connect to your VPS and edit the 
 
 TO DO
  - Web Interface for initial configuration of application.properties
+ - Integrate set up of LetsEncrypt SSL certificate
  - Integrate installation of PM2 Monitor (Web based monitor for PM2 - https://github.com/Tjatse/pm2-gui)
 
 Raise an issue on Github for any problems you find.
