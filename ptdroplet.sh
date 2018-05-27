@@ -29,6 +29,7 @@ set_timezone() {
   echo 'LC_ALL=en_US.UTF-8' >> /etc/environment
   echo 'LANG=en_US.UTF-8' >> /etc/environment
   echo 'LANGUAGE=en_US.UTF-8' >> /etc/environment
+  locale-gen en_US.UTF-8
   dpkg-reconfigure locales
 }
 
@@ -76,13 +77,10 @@ sleep 5
 clear
 
 # set time zone if not correct
-echo Stage 3: Check / set server timezone & locale
+echo Stage 3: Set server timezone & locale
 echo
 sleep 2
-echo "Current timezone setting:"
-timedatectl | grep "Time zone"
-echo
-prompt_confirm "Change it?" && set_timezone
+set_timezone
 echo
 echo Stage 3: Complete
 sleep 5
